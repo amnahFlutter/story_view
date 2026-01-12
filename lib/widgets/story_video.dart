@@ -127,7 +127,8 @@ class StoryVideoState extends State<StoryVideo> {
       );
     }
 
-    if (widget.videoLoader.state == LoadState.loading) {
+    if (widget.videoLoader.state == LoadState.loading ||
+        !playerController!.value.isInitialized) {
       return Center(
         child: widget.loadingWidget ??
             Container(
@@ -139,7 +140,7 @@ class StoryVideoState extends State<StoryVideo> {
               ),
             ),
       );
-    } else if (widget.videoLoader.state == LoadState.failure) {
+    } else {
       return Center(
           child: widget.errorWidget ??
               Text(
@@ -148,8 +149,6 @@ class StoryVideoState extends State<StoryVideo> {
                   color: Colors.white,
                 ),
               ));
-    } else {
-      return SizedBox.shrink();
     }
   }
 
