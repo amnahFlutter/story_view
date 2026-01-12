@@ -97,6 +97,7 @@ class StoryVideoState extends State<StoryVideo> {
 
         playerController!.initialize().then((v) {
           setState(() {});
+          widget.storyController!.updateCurrentDuration(playerController!.value.duration);
           widget.storyController!.play();
         });
 

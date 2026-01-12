@@ -20,7 +20,7 @@ enum IndicatorHeight { small, medium, large }
 class StoryItem {
   /// Specifies how long the page should be displayed. It should be a reasonable
   /// amount of time greater than 0 milliseconds.
-  final Duration duration;
+  Duration duration;
 
   /// Has this page been shown already? This is used to indicate that the page
   /// has been displayed. If some pages are supposed to be skipped in a story,
@@ -450,6 +450,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   StreamSubscription<PlaybackState>? _playbackSubscription;
 
+  StreamSubscription<Duration>? _durationSubscription;
+
   VerticalDragInfo? verticalDragInfo;
 
   StoryItem? get _currentStory {
@@ -505,6 +507,15 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       }
     });
 
+    _durationSubscription = widget.controller.durationNotifier.listen((duration) {
+      if (_currentStory != null) {
+        _currentStory!.duration = duration;
+      }
+
+      _animationController?.duration = duration;
+      setState(() {});
+    });
+
     _play();
   }
 
@@ -514,6 +525,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
     _animationController?.dispose();
     _playbackSubscription?.cancel();
+    _durationSubscription?.cancel();
 
     super.dispose();
   }
